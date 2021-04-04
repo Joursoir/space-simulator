@@ -78,6 +78,9 @@ void Events::KeyHandle(int key, int scancode, int action, int mode)
 
 void Events::CursorPosHandle(double xpos, double ypos)
 {
+	if(master->GetCursorMode() == GLFW_CURSOR_NORMAL)
+		return;
+
 	delta_x = xpos - x;
 	delta_y = ypos - y;
 

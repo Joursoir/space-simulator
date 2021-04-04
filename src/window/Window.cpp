@@ -32,6 +32,7 @@ Window *Window::Initialize(int width, int height, const char *title)
 
 	Window *w = new Window(win, width, height);
 	w->MakeContextCurrent();
+	w->ToggleCursorMode();
 	return w;
 }
 
@@ -49,8 +50,15 @@ void Window::MakeContextCurrent()
 	glViewport(0, 0, width, height);
 }
 
-void Window::SetCursorMode(int mode)
+int Window::GetCursorMode()
 {
+	return glfwGetInputMode(win, GLFW_CURSOR);
+}
+
+void Window::ToggleCursorMode()
+{
+	int mode = GetCursorMode() == GLFW_CURSOR_NORMAL ?
+		GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL;
 	glfwSetInputMode(win, GLFW_CURSOR, mode);
 }
 

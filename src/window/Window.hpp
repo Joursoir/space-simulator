@@ -17,7 +17,8 @@ public:
 
 	void Resize(int w, int h);
 	void MakeContextCurrent();
-	void SetCursorMode(int mode);
+	int GetCursorMode();
+	void ToggleCursorMode();
 	bool IsShouldClose();
 	void SetShouldClose(int flag);
 	void SwapBuffers();
