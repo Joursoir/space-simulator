@@ -9,7 +9,7 @@ public:
 	Shader() : shader_id(0), error_log(0) { }
 	~Shader();
 
-	int Compile(const char *source, GLenum shaderType);
+	int Compile(const char *path, GLenum shaderType);
 	char *GetError() { return error_log; }
 	GLuint GetID() { return shader_id; }
 };
