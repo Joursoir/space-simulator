@@ -2,8 +2,9 @@
 
 #include "Mesh.hpp"
 
-Mesh::Mesh(Vertex *vertices, size_t num_vert, GLuint *indices, size_t num_indices)
-	: number_indices(num_indices)
+Mesh::Mesh(GLenum primitive, Vertex *vertices, size_t num_vert,
+	GLuint *indices, size_t num_indices)
+	: mode(primitive), number_indices(num_indices)
 {
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
@@ -43,6 +44,6 @@ Mesh::~Mesh()
 void Mesh::Draw()
 {
 	glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, number_indices, GL_UNSIGNED_INT, 0);
+		glDrawElements(mode, number_indices, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 }

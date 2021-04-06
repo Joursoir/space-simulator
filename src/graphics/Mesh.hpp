@@ -6,10 +6,11 @@
 
 class Mesh {
 	GLuint VAO, VBO, EBO;
+	GLenum mode;
 	size_t number_indices;
 
 public:
-	Mesh(Vertex *vertices, size_t num_vert,
+	Mesh(GLenum primitive, Vertex *vertices, size_t num_vert,
 		GLuint *indices, size_t num_indices);
 	~Mesh();
 
