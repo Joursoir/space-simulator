@@ -3,6 +3,8 @@
 
 #include <glm/glm.hpp>
 
+#include "../xstdlib/xstdlib.hpp"
+
 class Texture;
 class Mesh;
 
@@ -11,6 +13,8 @@ class CelestialObject {
 
 	static Mesh *sphere;
 	static Mesh *circle;
+
+	struct linked_list<CelestialObject> *slaves;
 
 	/* time a given astronomical object takes to complete
 	one orbit around another object */
@@ -23,19 +27,19 @@ class CelestialObject {
 	around its axis of rotation relative to the background stars */
 	float rotation_period;
 	float rotation_speed;
+	float rotation_axis_tilt;
+	float rotation_ecliptic_tilt;
 
 	float object_radius;
-
-	float tilt_angle;
 public:
-	CelestialObject(Texture *t)
-		: texture(t) { }
+	CelestialObject(Texture *t) : texture(t), slaves(0) { }
 	static void InitializeMesh();
 	void SetPeriod(float a_orbital, float a_rotation);
 	void SetRadius(float object_r, float orbital_r);
-	void SetTilt(float angle);
+	void SetTilts(float rot_axis, float rot_ecliptic);
 	void SetPosition(glm::vec3 orbital);
 
+	void AddSlave(CelestialObject *slave);
 	void Draw(float time, float game_speed, unsigned int model_loc);
 
 };

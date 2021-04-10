@@ -34,14 +34,22 @@ void CelestialObject::SetRadius(float object_r, float orbital_r)
 	orbital_radius = orbital_r;
 }
 
-void CelestialObject::SetTilt(float angle)
+void CelestialObject::SetTilts(float rot_axis, float rot_ecliptic)
 {
-	tilt_angle = radians(angle);
+	rotation_axis_tilt = radians(90.0f + rot_axis);
+	rotation_ecliptic_tilt = radians(rot_ecliptic);
 }
 
 void CelestialObject::SetPosition(glm::vec3 orbital)
 {
 	orbital_pos = orbital;
+}
+
+void CelestialObject::AddSlave(CelestialObject *slave)
+{
+	struct linked_list<CelestialObject> *list;
+	list = new struct linked_list<CelestialObject>(slave, slaves);
+	slaves = list;
 }
 
 void CelestialObject::Draw(float time, float game_speed,
@@ -50,15 +58,17 @@ void CelestialObject::Draw(float time, float game_speed,
 	float
 		orb_speed = orbital_speed * game_speed,
 		rot_speed = rotation_speed * game_speed,
-		moveX = sin(radians(time) * orb_speed) * orbital_radius,
-		moveZ = cos(radians(time) * orb_speed) * orbital_radius;
+		rt_angle = radians(time) * orb_speed,
+		move_x = sin(rt_angle) * orbital_radius,
+		move_y = 0,
+		move_z = cos(rt_angle) * orbital_radius;
 
 	texture->Bind();
 
 	mat4 sphere_model(1.0f);
-	vec3 pos(orbital_pos.x - moveX, orbital_pos.y, orbital_pos.z - moveZ);
+	vec3 pos(orbital_pos.x - move_x, orbital_pos.y - move_y, orbital_pos.z - move_z);
 	sphere_model = translate(sphere_model, pos);
-	sphere_model = rotate(sphere_model, tilt_angle, vec3(1.0f, 0.0f, 0.0f));
+	sphere_model = rotate(sphere_model, rotation_axis_tilt, vec3(1.0f, 0.0f, 0.0f));
 	sphere_model = rotate(sphere_model, radians(time) * rot_speed, vec3(0.0f, 0.0f, 1.0f));
 	sphere_model = scale(sphere_model, vec3(object_radius, object_radius, object_radius));
 	glUniformMatrix4fv(model_loc, 1, GL_FALSE, value_ptr(sphere_model));
@@ -67,8 +77,15 @@ void CelestialObject::Draw(float time, float game_speed,
 	if(orbital_radius != 0.0f) {
 		mat4 circle_model(1.0f);
 		circle_model = translate(circle_model, orbital_pos);
+		// circle_model = rotate(circle_model, rotation_ecliptic_tilt, vec3(1.0f, 0.0f, 0.0f));
 		circle_model = scale(circle_model, vec3(orbital_radius, orbital_radius, orbital_radius));
 		glUniformMatrix4fv(model_loc, 1, GL_FALSE, value_ptr(circle_model));
 		circle->Draw();
+	}
+
+	struct linked_list<CelestialObject> *ptr;
+	for(ptr = slaves; ptr; ptr = ptr->next) {
+		ptr->data->SetPosition(pos);
+		ptr->data->Draw(time, game_speed, model_loc);
 	}
 }
