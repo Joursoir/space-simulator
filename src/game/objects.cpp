@@ -1,10 +1,9 @@
 #include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
 
 #include "objects.hpp"
 #include "graphics/Mesh.hpp"
 #include "graphics/Vertex.hpp"
-
-#define PI 3.1415926535
 
 using namespace glm;
 
@@ -65,11 +64,11 @@ Mesh *form_sphere(int longitude_count, int latitude_count)
 	float radius = 1.0;
 
 	// sectors
-	float longitude_step = PI / longitude_count;
+	float longitude_step = pi<float>() / longitude_count;
 	float longitude_angle;
 
 	// stacks
-	float latitude_step = 2 * PI / latitude_count;
+	float latitude_step = 2 * pi<float>() / latitude_count;
 	float latitude_angle;
 
 	int sphere_num_v = (longitude_count + 1) * (latitude_count + 1);
@@ -127,7 +126,7 @@ Mesh *form_circle(int angle_count)
 	int i, idx, idy;
 	float x, y, z;
 	float radius = 1.0f;
-	float angle_step = 2 * PI / angle_count;
+	float angle_step = 2 * pi<float>() / angle_count;
 	float angle;
 
 	Vertex *circle_vertices = new Vertex[angle_count];
