@@ -12,6 +12,8 @@ class Window {
 public:
 	~Window() { }
 	GLFWwindow *GetWin() { return win; }
+	void GetWinSize(int &w, int &h)
+		{ w = width; h = height; }
 
 	static Window *Initialize(int width, int height, const char *title);
 
