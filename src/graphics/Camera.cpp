@@ -5,29 +5,36 @@ using namespace glm;
 
 Camera::Camera(vec3 a_pos, vec3 a_front, vec3 a_up,
 	GLfloat a_yaw, GLfloat a_pitch)
-	: move_speed(init_speed),
-	mouse_sensitivity(init_sensitivity),
-	fov(init_fov)
 {
 	position = a_pos;
 	up = a_up;
 	world_up = up;
+
 	yaw = a_yaw;
 	pitch = a_pitch;
+
+	move_speed = 1.0f;
+	mouse_sensitivity = 0.25f;
+
+	fov = radians(45.0f);
+	near = 0.1f;
+	far = 100.0f;
 	UpdateVectors();
 }
 
 mat4 Camera::GetProjViewMatrix(int w_width, int w_height)
 {
-	return 
-		perspective(fov, (GLfloat)w_width / (GLfloat)w_height, 0.1f, 100.0f) *
+	return
+		perspective(fov,
+			(GLfloat)w_width / (GLfloat)w_height, near, far) *
 		lookAt(position, position + front, up);
 }
 
 mat4 Camera::GetSkyboxMatrix(int w_width, int w_height)
 {
-	return 
-		perspective(fov, (GLfloat)w_width / (GLfloat)w_height, 0.1f, 100.0f) *
+	return
+		perspective(fov,
+			(GLfloat)w_width / (GLfloat)w_height, near, far) *
 		mat4(mat3(lookAt(position, position + front, up)));
 }
 
@@ -52,7 +59,7 @@ void Camera::Movement(camera_move direction, GLfloat delta_time)
 	UpdateVectors();
 }
 
-void Camera::View(GLfloat delta_x, GLfloat delta_y)
+void Camera::UpdateView(GLfloat delta_x, GLfloat delta_y)
 {
 	yaw += delta_x * mouse_sensitivity;
 	pitch -= delta_y * mouse_sensitivity; // if '+' then inverse
@@ -65,7 +72,7 @@ void Camera::View(GLfloat delta_x, GLfloat delta_y)
 	UpdateVectors();
 }
 
-void Camera::Fov(GLfloat delta_y)
+void Camera::UpdateFov(GLfloat delta_y)
 {
 	if(!delta_y)
 		return;
