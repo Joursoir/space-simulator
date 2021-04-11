@@ -1,9 +1,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 
+#include "../graphics/Mesh.hpp"
+#include "../graphics/Vertex.hpp"
 #include "objects.hpp"
-#include "graphics/Mesh.hpp"
-#include "graphics/Vertex.hpp"
 
 using namespace glm;
 

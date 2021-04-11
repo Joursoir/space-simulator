@@ -5,7 +5,7 @@
 #include "CelestialObject.hpp"
 #include "../graphics/Texture.hpp"
 #include "../graphics/Mesh.hpp"
-#include "../objects.hpp"
+#include "objects.hpp"
 
 using namespace glm;
 
